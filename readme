@@ -1,0 +1,7 @@
+This is ball collision simulator using python
+
+User can add or remove ball with left mouse click
+
+You should also check video from Coding train I took idea from: https://youtu.be/dJNFPv9Mj-Y?si=J24Hl7LnQdwtVnps
+
+Wikipedia article about phisics I used to create this: https://en.wikipedia.org/wiki/Elastic_collision#Two-dimensional
