@@ -19,6 +19,7 @@ class Ball:
 
     def draw(self, win):
         pygame.draw.circle(win, self.color, (self.x, self.y), self.radius)
+        pygame.draw.circle(win, (0, 0, 0), (self.x, self.y), self.radius, 1)
 
     def move(self):
         self.x += self.vel_x
@@ -45,7 +46,13 @@ class Ball:
             self.y = height - self.radius
 
     def is_colliding(self, other):
-        return sqrt((self.x - other.x)**2 + (self.y - other.y)**2) <= self.radius + other.radius
+        return self.get_distance(other) <= self.radius + other.radius
+
+    def get_distance(self, other):
+        return sqrt((self.x - other.x)**2 + (self.y - other.y)**2)
+
+    def get_overlap(self, other):
+        return self.radius + other.radius - self.get_distance(other)
 
     def ball_collision(self, other):
         if self.is_colliding(other):
@@ -65,8 +72,17 @@ class Ball:
             other.vel_y = v2_1component * sin(phi) + v2_2component
             other.theta = atan2(other.vel_y, other.vel_x)
             
-            overlap = 0.5 * (self.radius + other.radius - sqrt((self.x - other.x)**2 + (self.y - other.y)**2))
-            self.x += overlap * cos(phi)
-            self.y += overlap * sin(phi)
-            other.x -= overlap * cos(phi)
-            other.y -= overlap * sin(phi)
+            overlap = self.get_overlap(other)
+            if overlap != 0:
+                gap_when_collided = 0.5 * overlap + overlap // abs(overlap) # overlap // abs(overlap) is one pixer
+                self.x += gap_when_collided * cos(phi)
+                self.y += gap_when_collided * sin(phi)
+                other.x -= gap_when_collided * cos(phi)
+                other.y -= gap_when_collided * sin(phi)
+            else:
+                x_dis = self.x - other.x
+                y_dis = self.y - other.y
+                self.x += x_dis // abs(x_dis) # when overlap is 0 but balls still touching move them 2 pixels appart
+                self.y += y_dis
+                other.x -= x_dis // abs(x_dis)
+                other.y -= y_dis
