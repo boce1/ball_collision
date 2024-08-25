@@ -73,7 +73,7 @@ class Ball:
             other.theta = atan2(other.vel_y, other.vel_x)
             
             overlap = self.get_overlap(other)
-            gap_when_collided = 0.5 * overlap + overlap // abs(overlap) # overlap // abs(overlap) is one pixer
+            gap_when_collided = 0.5 * overlap + 1 # overlap // abs(overlap) is one pixer
             self.x += gap_when_collided * cos(phi)
             self.y += gap_when_collided * sin(phi)
             other.x -= gap_when_collided * cos(phi)
