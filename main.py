@@ -7,7 +7,6 @@ pygame.init()
 window_width = 600
 window_height = window_width
 WHITE = (255, 255, 255)
-BLACK = (0, 0, 0)
 
 FPS = 60
 
@@ -15,6 +14,7 @@ pygame.display.set_caption("ball collision")
 window = pygame.display.set_mode((window_width, window_height), pygame.RESIZABLE)
 
 balls = set()
+ball_to_remove = False
 
 def draw_scene(win, balls):
     win.fill(WHITE)
@@ -36,6 +36,16 @@ def add_ball(event, mouse_x, mouse_y):
             
             if add_flag:
                 balls.add(ball_temp)
+
+def remove_ball(event, mouse_x, mouse_y):
+    global balls, ball_to_remove
+    if event.type == pygame.MOUSEBUTTONDOWN:
+        if event.button == 1:
+            for ball in balls:
+                if ball.x - ball.radius <= mouse_x <= ball.x + ball.radius and ball.y - ball.radius <= mouse_y <= ball.y + ball.radius:
+                    balls.remove(ball)
+                    ball_to_remove = True
+                    break
 
 def move_balls(win, balls):
     for ball in balls:
@@ -61,5 +71,8 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-        add_ball(event, mouse_x, mouse_y)
+        remove_ball(event, mouse_x, mouse_y)
+        if not ball_to_remove:
+            add_ball(event, mouse_x, mouse_y)
+        ball_to_remove = False
 pygame.quit()
