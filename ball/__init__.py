@@ -46,7 +46,7 @@ class Ball:
             self.y = height - self.radius
 
     def is_colliding(self, other):
-        return self.get_distance(other) < self.radius + other.radius
+        return self.get_distance(other) <= self.radius + other.radius
 
     def get_distance(self, other):
         return sqrt((self.x - other.x)**2 + (self.y - other.y)**2)
@@ -73,7 +73,7 @@ class Ball:
             other.theta = atan2(other.vel_y, other.vel_x)
             
             overlap = self.get_overlap(other)
-            gap_when_collided = 0.5 * overlap + 1 # overlap // abs(overlap) is one pixer
+            gap_when_collided = 0.5 * (overlap + self.vel + other.vel) # overlap // abs(overlap) is one pixer
             self.x += gap_when_collided * cos(phi)
             self.y += gap_when_collided * sin(phi)
             other.x -= gap_when_collided * cos(phi)
